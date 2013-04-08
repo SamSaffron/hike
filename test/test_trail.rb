@@ -231,6 +231,12 @@ module TrailTests
     assert trail.stat(fixture_path("app/views"))
     assert_nil trail.stat(fixture_path("app/views/missing.html"))
   end
+
+  def test_mtime
+    assert trail.mtime(fixture_path("app/views/index.html.erb"))
+    assert trail.mtime(fixture_path("app/views"))
+    assert_nil trail.mtime(fixture_path("app/views/missing.html"))
+  end
 end
 
 class TrailTest < Test::Unit::TestCase

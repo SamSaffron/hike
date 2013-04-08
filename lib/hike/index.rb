@@ -30,6 +30,7 @@ module Hike
                    }.freeze
       @pathnames  = paths.map { |path| Pathname.new(path) }
 
+      @mtimes   = {}
       @stats    = {}
       @entries  = {}
       @patterns = {}
@@ -92,6 +93,25 @@ module Hike
         begin
           @stats[key] = File.stat(path)
         rescue Errno::ENOENT
+          @stats[key] = nil
+        end
+      end
+    end
+
+    # A cached version of 'File.mtime'. returns nil if the file does
+    # not exist
+    def mtime(path)
+      key = path.to_s
+      if @stats.key?(key)
+        stat = @stats[key]
+        stat.mtime if stat
+      elsif @mtimes.key?(key)
+        @mtimes[key]
+      else
+        begin
+          @mtimes[key] = File.mtime(path)
+        rescue Errno::ENOENT
+          @mtimes[key] = nil
           @stats[key] = nil
         end
       end

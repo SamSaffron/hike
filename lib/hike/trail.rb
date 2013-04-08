@@ -167,6 +167,13 @@ module Hike
       index.stat(*args)
     end
 
+    # `Trail#mtime` is equivalent to `File#mtime`. It is not
+    # recommend to use this method for general purposes. It exists for
+    # parity with `Index#mtime`.
+    def mtime(*args)
+      index.mtime(*args)
+    end
+
     private
       def normalize_extension(extension)
         if extension[/^\./]
